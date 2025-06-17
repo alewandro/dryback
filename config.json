@@ -1,0 +1,9 @@
+{
+    "_comment": "par: nombre de archivo para cada par ",
+    "_comment2": "cuidado no intercambiar archivos spot y futuros ya que spot no tienen encabezados y futuros si. Se procesan distino!",
+    "BTCUSDT": "BTCUSDT-1h-2025-05.csv",
+    "_example_ETHUSDT": "ETH_USDT-1d-2025-05.csv",
+    "_example_BNBUSDT": "BNB_USDT-1d-2025-05.csv",
+    "_example_XRPUSDT": "XRP_USDT-1d-2025-05.csv",
+    "_example_SOLUSDT": "SOL_USDT-1d-2025-05.csv"
+}
