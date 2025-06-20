@@ -12,7 +12,30 @@ from pathlib import Path
 app = FastAPI()
 DATA_DIR = Path(__file__).parent / "data"
 CONFIG_PATH = Path(__file__).parent / "config.json"
-LOG_FILE = Path(__file__).parent / "logs/server_requests.log"
+LOG_FILE = Path(__file__).parent / "logs/consultas.log"
+ERROR_LOG_FILE = Path(__file__).parent / "logs/error.log"
+
+# Asegurarse de que los directorios existen
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+
+# Configurar logging
+
+import logging
+logging.basicConfig(
+    filename=ERROR_LOG_FILE,
+    level=logging.ERROR,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+)
+# Manejo de errores global
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    # logging.error(f"Unhandled error: {exc}", exc_info=True)
+    logging.error(f"{request.method} {request.url.path} {dict(request.query_params)} - {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error"},
+    )
 
 # CORS y middlewares
 app.add_middleware(
@@ -27,9 +50,14 @@ app.add_middleware(
 class LoggingMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         with open(LOG_FILE, "a") as f:
-            f.write(f"[{request.method}] {request.url.path}\n")
-        response = await call_next(request)
-        return response
+            f.write(f"[{request.method}] {request.url.path} {dict(request.query_params)}\n")
+        try:
+            response = await call_next(request)
+            return response
+        except Exception as e:
+            with open(ERROR_LOG_FILE, "a") as ef:
+                ef.write(f"[{request.method}] {request.url.path} {dict(request.query_params)} ERROR: {str(e)}\n")
+            raise
 
 app.add_middleware(LoggingMiddleware)
 
@@ -63,7 +91,7 @@ async def get_klines(symbol: str):
         return JSONResponse({"error": f"Symbol {symbol} not found"}, status_code=404)
     try:
         row = next(iterator)
-        # Devuelve la fila como lista de valores (igual que el JS original)
+        # Devuelve la fila como lista de valores 
         return [row]
     except StopIteration:
         return JSONResponse({"error": "No more data"}, status_code=404)
@@ -71,11 +99,11 @@ async def get_klines(symbol: str):
 @app.get("/status")
 async def status():
     import time
-    return {"uptime": time.time() - os.getpid()}
+    return {"uptime ": time.time() - os.getpid()}
 
 @app.get("/ping")
 async def ping():
-    return {"pong": True}
+    return {"pong /n"}
 
 # Proxy para otras rutas
 @app.api_route("/{full_path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
