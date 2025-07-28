@@ -1,0 +1,16 @@
+{
+    "spot": {
+        "BTCUSDT": {
+            "15m": "BTCUSDT-15m-2025-05.csv",
+            "1h": "BTCUSDT-1h-2025-05.csv",
+            "1d": "BTCUSDT-1d-2025-05.csv"
+        }
+    },
+    "futures": {
+        "BTCUSDT": {
+            "15m": "fBTCUSDT-15m-2025-05.csv",
+            "1h": "fBTCUSDT-1h-2025-05.csv",
+            "1d": "fBTCUSDT-1d-2025-05.csv"
+        }
+    }
+}
