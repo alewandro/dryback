@@ -102,7 +102,7 @@ async def proxy_to_binance(request: Request, full_path: str):
         params = dict(request.query_params)
         
         # Realizar la petición a Binance sin enviar los headers originales
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(verify=False) as client:
             response = await client.request(
                 method=request.method,
                 url=binance_url,
