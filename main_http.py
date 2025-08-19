@@ -131,5 +131,5 @@ if __name__ == "__main__":
     uvicorn.run(
         app,
         host="0.0.0.0",
-        port=8888  # Puerto diferente para distinguir del servidor HTTPS
+        port=9999   #8888  # Puerto diferente para distinguir del servidor HTTPS
     )

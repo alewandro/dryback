@@ -24,4 +24,4 @@ RUN mkdir -p logs
 EXPOSE 9999
 
 # Comando para ejecutar la aplicación
-CMD ["python", "main.py"]
+CMD ["python", "main_http.py"]
